@@ -1,0 +1,54 @@
+# Base class
+class Account:
+    def __init__(self, name, balance):
+        self._name = name               # Protected member
+        self.__balance = balance        # Private member
+
+    def deposit(self, amount):
+        if amount > 0:
+            self.__balance += amount
+            print(f"Deposited {amount}. New balance: {self.__balance}")
+        else:
+            print("Invalid deposit amount.")
+
+    def withdraw(self, amount):
+        if 0 < amount <= self.__balance:
+            self.__balance -= amount
+            print(f"Withdrawn {amount}. Remaining balance: {self.__balance}")
+        else:
+            print("Insufficient balance or invalid amount.")
+
+    def get_balance(self):  # Public method to access private member
+        return self.__balance
+
+    def display(self):
+        print(f"Account holder: {self._name}, Balance: {self.__balance}")
+
+# Derived class
+class SavingsAccount(Account):
+    def __init__(self, name, balance, interest_rate):
+        super().__init__(name, balance)   # Calling base class constructor
+        self.interest_rate = interest_rate
+
+    # Method overriding
+    def display(self):
+        super().display()  # Calling base class display
+        print(f"Interest Rate: {self.interest_rate}%")
+
+    def add_interest(self):
+        interest = self.get_balance() * (self.interest_rate / 100)
+        self.deposit(interest)
+        print(f"Interest of {interest:.2f} added.")
+
+# Main program
+acc = SavingsAccount("Alice", 1000, 5)
+acc.display()
+acc.deposit(500)
+acc.withdraw(300)
+acc.add_interest()
+
+# Attempt to access private variable directly (will fail)
+# print(acc.__balance)  # Uncommenting this will cause an AttributeError
+
+# Access protected variable (possible but discouraged)
+print(f"Accessing protected member: {acc._name}")
